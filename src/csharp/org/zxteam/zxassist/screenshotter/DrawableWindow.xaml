@@ -1,0 +1,23 @@
+﻿<Window x:Class="org.zxteam.zxassist.ScreenShotter.DrawableWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d"
+		d:DesignWidth="300"
+		d:DesignHeight="200" Padding="0">
+	<Grid Margin="0">
+		<Image x:Name="pic"
+			   Source="{Binding ScreenshotImage}"
+			   HorizontalAlignment="Stretch"
+			   VerticalAlignment="Stretch" />
+		<InkCanvas Width="{Binding ElementName=pic, Path=ActualWidth}"
+				   Height="{Binding ElementName=pic, Path=ActualHeight}"
+				   Background="#40FFFFFF" IsEnabled="{Binding IsEditMode}"
+				   DefaultDrawingAttributes="{Binding SelectedToolDrawingAttributes}">
+			<!--<InkCanvas.DefaultDrawingAttributes>
+				<DrawingAttributes x:Name="attribute" Width="40" Height="40" Color="{Binding SelectedToolColor}"/>
+			</InkCanvas.DefaultDrawingAttributes>-->
+		</InkCanvas>
+	</Grid>
+</Window>
