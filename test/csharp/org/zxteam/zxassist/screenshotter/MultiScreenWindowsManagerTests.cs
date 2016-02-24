@@ -21,11 +21,11 @@
 
 		public void ChangeResolutionTest()
 		{
-			MultiScreenWindowsManager mgr = new MultiScreenWindowsManager()
-			{
-				Content = 1,
-				ContentStringFormat = "Number {0}"
-			};
+			//MultiScreenWindowsManager<> mgr = new MultiScreenWindowsManager()
+			//{
+			//	Content = 1,
+			//	ContentStringFormat = "Number {0}"
+			//};
 		}
 	}
 }

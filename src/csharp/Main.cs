@@ -1,5 +1,5 @@
 ﻿#if MANUAL_TEST
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("ZXAssist-ManualTest")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("ZXAssistTest")]
 #endif
 
 namespace org.zxteam.zxassist
