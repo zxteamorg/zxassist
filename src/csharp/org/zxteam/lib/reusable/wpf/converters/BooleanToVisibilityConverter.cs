@@ -1,4 +1,4 @@
-﻿namespace org.zxteam.zxassist
+﻿namespace org.zxteam.lib.reusable.wpf.converters
 {
 	using System;
 	using System.Globalization;

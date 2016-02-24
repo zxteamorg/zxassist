@@ -1,6 +1,6 @@
-﻿namespace org.zxteam.zxassist.ScreenShotter
+﻿namespace org.zxteam.zxassist.screenshotter
 {
-	using org.zxteam.zxassist.Utils;
+	using org.zxteam.lib.reusable.wpf.unusual;
 	using System;
 	using System.Runtime.InteropServices;
 	using System.Windows;
@@ -8,7 +8,7 @@
 	using System.Windows.Interop;
 	using System.Windows.Media;
 
-	public partial class ToolWindow : MouseHauntingWindow
+	public partial class ToolWindow : DynamicContextMenu
 	{
 		public ToolWindow()
 		{

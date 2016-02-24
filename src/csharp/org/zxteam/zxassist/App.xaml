@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:tb="http://www.hardcodet.net/taskbar"
              xmlns:shell="clr-namespace:org.zxteam.zxassist"
-             xmlns:settings="clr-namespace:org.zxteam.zxassist.Settings"
              ShutdownMode="OnExplicitShutdown">
 	<Application.Resources>
 		<ContextMenu x:Shared="false" x:Key="SysTrayMenu">

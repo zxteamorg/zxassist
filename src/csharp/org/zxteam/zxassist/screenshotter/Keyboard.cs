@@ -1,4 +1,4 @@
-﻿namespace org.zxteam.zxassist.ScreenShotter
+﻿namespace org.zxteam.zxassist.screenshotter
 {
 	using System;
 	using System.Diagnostics;

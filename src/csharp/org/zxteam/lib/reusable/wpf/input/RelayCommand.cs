@@ -1,4 +1,4 @@
-﻿namespace org.zxteam.zxassist
+﻿namespace org.zxteam.lib.reusable.wpf.input
 {
 	using System;
 	using System.Linq;

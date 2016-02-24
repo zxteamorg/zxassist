@@ -4,6 +4,7 @@
 
 namespace org.zxteam.zxassist
 {
+	using org.zxteam.lib.reusable.system;
 	using System;
 
 	public static class EntryPoint

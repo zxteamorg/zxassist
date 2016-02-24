@@ -1,6 +1,5 @@
-namespace org.zxteam.zxassist.ScreenShotter
+namespace org.zxteam.zxassist.screenshotter
 {
-	using org.zxteam.zxassist.Utils;
 	using System;
 	using System.IO;
 	using System.Windows.Media.Imaging;
@@ -10,9 +9,12 @@ namespace org.zxteam.zxassist.ScreenShotter
 	using System.Collections.Generic;
 	using System.Windows.Input;
 	using System.Windows.Ink;
-	using org.zxteam.lib.reusable.WindowsHooks;
 	using org.zxteam.zxassist.screenshotter;
 	using System.Windows;
+	using org.zxteam.lib.reusable.wpf;
+	using org.zxteam.lib.reusable.wpf.input;
+	using org.zxteam.lib.reusable.system.hooks;
+	using org.zxteam.lib.reusable.system;
 
 	internal class ScreenshotManager : ViewModelBase, IDisposable
 	{
@@ -170,7 +172,7 @@ namespace org.zxteam.zxassist.ScreenShotter
 				//this._screenshotWindow = new DrawableWindow();
 				//this._screenshotWindow.DataContext = this;
 				//this._screenshotWindow.Show();
-				MultiScreenWindowsManager<Window> mgr = new MultiScreenWindowsManager<Window>();
+				MultiScreenWindowsManager<DrawableWindow> mgr = new MultiScreenWindowsManager<DrawableWindow>();
 				mgr.Show();
 			}
 
@@ -181,26 +183,26 @@ namespace org.zxteam.zxassist.ScreenShotter
 			//}
 			//this._toolWindow.Show();
 
-			//if (this._defaultActionTimer == null)
-			//{
-			//	int cancelCount = 5;
-			//	this.DefaultActionTimeout = cancelCount;
-			//	this._defaultActionTimer = new DispatcherTimer();
-			//	this._defaultActionTimer.Interval = TimeSpan.FromSeconds(1);
-			//	this._defaultActionTimer.Tick += (s, e) =>
-			//	{
-			//		if (--cancelCount == 0)
-			//		{
-			//			this._defaultActionTimer.Stop();
-			//			this._defaultActionTimer = null;
-			//			this.ExecDefaultAction();
-			//		}
-			//		this.DefaultActionTimeout = cancelCount;
-			//	};
-			//}
-			//this._defaultActionTimer.Start();
+			if (this._defaultActionTimer == null)
+			{
+				int cancelCount = 5;
+				this.DefaultActionTimeout = cancelCount;
+				this._defaultActionTimer = new DispatcherTimer();
+				this._defaultActionTimer.Interval = TimeSpan.FromSeconds(1);
+				this._defaultActionTimer.Tick += (s, e) =>
+				{
+					if (--cancelCount == 0)
+					{
+						this._defaultActionTimer.Stop();
+						this._defaultActionTimer = null;
+						this.ExecDefaultAction();
+					}
+					this.DefaultActionTimeout = cancelCount;
+				};
+			}
+			this._defaultActionTimer.Start();
 
-			//this.CurrentMode = MODE.ACTIVATION;
+			this.CurrentMode = MODE.ACTIVATION;
 		}
 		private void Cancel()
 		{

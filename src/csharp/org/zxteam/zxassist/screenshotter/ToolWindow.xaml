@@ -1,8 +1,8 @@
-﻿<zxa:MouseHauntingWindow 
-	x:Class="org.zxteam.zxassist.ScreenShotter.ToolWindow"
+﻿<zxa:DynamicContextMenu 
+	x:Class="org.zxteam.zxassist.screenshotter.ToolWindow"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:zxa="clr-namespace:org.zxteam.zxassist"
+	xmlns:zxa="clr-namespace:org.zxteam.lib.reusable.wpf.unusual"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d" >
@@ -65,4 +65,4 @@
 			</StackPanel>
 		</DockPanel>
 	</Grid>
-</zxa:MouseHauntingWindow>
+</zxa:DynamicContextMenu>

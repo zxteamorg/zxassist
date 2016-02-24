@@ -1,4 +1,4 @@
-﻿namespace org.zxteam.zxassist.Utils
+﻿namespace org.zxteam.lib.reusable.system
 {
 	using System;
 	using System.Runtime.InteropServices;

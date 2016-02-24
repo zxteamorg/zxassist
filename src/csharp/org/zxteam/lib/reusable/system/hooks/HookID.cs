@@ -1,4 +1,4 @@
-﻿namespace org.zxteam.lib.reusable.WindowsHooks
+﻿namespace org.zxteam.lib.reusable.system.hooks
 {
 		internal enum HookID : int
 		{

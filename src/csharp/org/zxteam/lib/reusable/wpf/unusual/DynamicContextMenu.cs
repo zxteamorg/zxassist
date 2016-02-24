@@ -1,6 +1,5 @@
-﻿namespace org.zxteam.zxassist
+﻿namespace org.zxteam.lib.reusable.wpf.unusual
 {
-	using org.zxteam.zxassist.Utils;
 	using System;
 	using System.Runtime.InteropServices;
 	using System.Windows;
@@ -9,7 +8,7 @@
 	using System.Windows.Media;
 	using System.Windows.Threading;
 	using System.Collections.Generic;
-	using org.zxteam.lib.reusable.WindowsHooks;
+	using org.zxteam.lib.reusable.system.hooks;
 
 	sealed class ExtendedLowLevelMouseHook
 	{
@@ -178,17 +177,17 @@
 		ACTIVE,
 	}
 
-	public class MouseHauntingWindow : Window
+	public class DynamicContextMenu : Window
 	{
 		private static readonly DependencyPropertyKey __modePropertyKey = DependencyProperty.RegisterReadOnly(
 			"Mode",
 			typeof(WINDOW_MODE),
-			typeof(MouseHauntingWindow),
+			typeof(DynamicContextMenu),
 			new PropertyMetadata(WINDOW_MODE.INACTIVE, OnModePropertyChanged));
 		public static readonly DependencyProperty ModeProperty = __modePropertyKey.DependencyProperty;
 		private static void OnModePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			MouseHauntingWindow _this = (MouseHauntingWindow)d;
+			DynamicContextMenu _this = (DynamicContextMenu)d;
 			WINDOW_MODE value = (WINDOW_MODE)e.NewValue;
 			switch (value)
 			{
@@ -213,7 +212,7 @@
 		}
 
 
-		private const int MOUSE_MOVING_TIMEOUT = 150;
+		private const int MOUSE_MOVING_TIMEOUT = 200;
 		private const int MOUSE_IDLE_TIMEOUT = 250;
 		private const double ACTIVE_OPACITY = 1;
 		private const double HINT_OPACITY = 0.25;
@@ -221,7 +220,7 @@
 		private readonly ExtendedLowLevelMouseHook _mouseHook;
 		private readonly DispatcherTimeout _startMouseMoveTimeout;
 
-		public MouseHauntingWindow()
+		public DynamicContextMenu()
 		{
 			this.AllowsTransparency = true;
 			this.Background = Brushes.Transparent;

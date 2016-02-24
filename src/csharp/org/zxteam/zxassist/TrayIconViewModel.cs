@@ -1,11 +1,11 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Input;
-using org.zxteam.zxassist.Settings;
-using org.zxteam.zxassist.ScreenShotter;
-
-namespace org.zxteam.zxassist.TrayIcon
+﻿namespace org.zxteam.zxassist
 {
+	using org.zxteam.zxassist.preferences;
+	using org.zxteam.zxassist.screenshotter;
+	using System;
+	using System.Windows;
+	using System.Windows.Input;
+
 	/// <summary>
 	/// Provides bindable properties and commands for the NotifyIcon. In this sample, the
 	/// view model is assigned to the NotifyIcon in XAML. Alternatively, the startup routing
@@ -19,7 +19,7 @@ namespace org.zxteam.zxassist.TrayIcon
 		{
 			if (Application.Current.MainWindow == null)
 			{
-				Application.Current.MainWindow = new SettingsWindow();
+				Application.Current.MainWindow = new PreferencesWindow();
 				Application.Current.MainWindow.Show();
 			}
 			return Application.Current.MainWindow;

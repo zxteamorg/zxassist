@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Hardcodet.Wpf.TaskbarNotification;
 using System.Threading;
+using org.zxteam.zxassist.screenshotter;
 
 namespace org.zxteam.zxassist
 {
@@ -16,7 +17,7 @@ namespace org.zxteam.zxassist
 	public partial class App : Application
 	{
 		private TaskbarIcon _trayIcon;
-		private ScreenShotter.ScreenshotManager _screenshotManager;
+		private ScreenshotManager _screenshotManager;
 
 		public App()
 		{
@@ -31,15 +32,15 @@ namespace org.zxteam.zxassist
 			this._trayIcon = (TaskbarIcon)FindResource("AppTrayIcon");
 			if (this._trayIcon != null)
 			{
-				this._trayIcon.DataContext = new TrayIcon.TrayIconViewModel();
+				this._trayIcon.DataContext = new TrayIconViewModel();
 			}
 
-			this._screenshotManager = new ScreenShotter.ScreenshotManager();
+			this._screenshotManager = new ScreenshotManager();
 
 #if DEBUG
 			if (System.Diagnostics.Debugger.IsAttached)
 			{
-				((TrayIcon.TrayIconViewModel)this._trayIcon.DataContext).ShowDemoToolWindowCommand.Execute(null);
+				((TrayIconViewModel)this._trayIcon.DataContext).ShowDemoToolWindowCommand.Execute(null);
 			}
 #endif
 		}

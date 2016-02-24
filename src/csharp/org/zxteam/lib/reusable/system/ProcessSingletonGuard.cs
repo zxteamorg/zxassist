@@ -1,13 +1,13 @@
-using System;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security.AccessControl;
-using System.Security.Principal;
-using System.Threading;
-
-namespace org.zxteam.zxassist
+namespace org.zxteam.lib.reusable.system
 {
+	using System;
+	using System.Linq;
+	using System.Reflection;
+	using System.Runtime.InteropServices;
+	using System.Security.AccessControl;
+	using System.Security.Principal;
+	using System.Threading;
+
 	public sealed class ProcessSingletonGuard : IDisposable
 	{
 		public enum SCOPE
@@ -59,8 +59,8 @@ namespace org.zxteam.zxassist
 			MutexAccessRule allowEveryoneRule = new MutexAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), MutexRights.FullControl, AccessControlType.Allow);
 			MutexSecurity securitySettings = new MutexSecurity();
 			securitySettings.AddAccessRule(allowEveryoneRule);
-			
-			 // Need a place to store a return value in Mutex() constructor call
+
+			// Need a place to store a return value in Mutex() constructor call
 			bool createdNew;
 
 			this._instanceHandle = new Mutex(false, mutexName, out createdNew, securitySettings);
@@ -90,13 +90,32 @@ namespace org.zxteam.zxassist
 		private static string ResolveAppID()
 		{
 			var attrs = typeof(ProcessSingletonGuard).Assembly.GetCustomAttributes(false);
-			GuidAttribute guidAttr = attrs.OfType<GuidAttribute>().FirstOrDefault();
-			if (guidAttr != null) { return guidAttr.Value; }
 
-			AssemblyProductAttribute productAttr = attrs.OfType<AssemblyProductAttribute>().FirstOrDefault();
-			if (productAttr != null) { return productAttr.Product; }
+			{
+				GuidAttribute guidAttr = attrs.OfType<GuidAttribute>().FirstOrDefault();
+				if (guidAttr != null)
+				{
+					string value = guidAttr.Value;
+					if (!string.IsNullOrWhiteSpace(value)) { return value; }
+				}
+			}
 
-			throw new Exception();
+			{
+				AssemblyProductAttribute productAttr = attrs.OfType<AssemblyProductAttribute>().FirstOrDefault();
+				if (productAttr != null)
+				{
+					string value = productAttr.Product;
+					if (!string.IsNullOrWhiteSpace(value)) { return value; }
+				}
+			}
+
+			using (var currentProcess = System.Diagnostics.Process.GetCurrentProcess())
+			{
+				var currentModuleName = currentProcess.MainModule.ModuleName;
+				if (!string.IsNullOrWhiteSpace(currentModuleName)) { return currentModuleName; }
+			}
+
+			throw new Exception("Cannot Resolve Application ID");
 		}
 	}
 }

@@ -1,11 +1,11 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-
-namespace org.zxteam.zxassist.Settings
+﻿namespace org.zxteam.zxassist.preferences
 {
-	public partial class SettingsWindow : Window
+	using System.Windows;
+	using System.Windows.Controls;
+
+	public partial class PreferencesWindow : Window
 	{
-		public SettingsWindow()
+		public PreferencesWindow()
 		{
 			InitializeComponent();
 		}
