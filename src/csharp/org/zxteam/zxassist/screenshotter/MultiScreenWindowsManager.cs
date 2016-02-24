@@ -1,18 +1,20 @@
 ﻿namespace org.zxteam.zxassist.screenshotter
 {
 	using System;
-	using System.Windows;
-	using System.Windows.Forms;
-	using System.Windows.Input;
 	using System.Collections.Generic;
-	using System.Windows.Threading;
+	using System.Linq;
+	using System.Windows;
+	using System.Windows.Controls;
+	using System.Windows.Input;
 	using System.Windows.Media;
+	using System.Windows.Threading;
 
 	using org.zxteam.lib.reusable.wpf;
+	using org.zxteam.lib.reusable.system;
 
-	internal class MultiScreenWindowsManager<TWnd> : IDisposable where TWnd : Window, new()
+	internal class MultiScreenWindowsManager<TWnd> : IDisposable where TWnd : FullScreenWindow, new()
 	{
-		private readonly List<Window> _windows = new List<Window>(System.Windows.Forms.SystemInformation.MonitorCount);
+		private readonly List<FullScreenWindow> _windows = new List<FullScreenWindow>(System.Windows.Forms.SystemInformation.MonitorCount);
 		private readonly Dispatcher _dispatcher;
 
 		public MultiScreenWindowsManager()
@@ -20,18 +22,6 @@
 			this._dispatcher = Dispatcher.CurrentDispatcher;
 			Microsoft.Win32.SystemEvents.DisplaySettingsChanged += new EventHandler(SystemEvents_DisplaySettingsChanged);
 
-			//this.WindowState = System.Windows.WindowState.Maximized;
-			//this.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
-			//this.WindowStyle = System.Windows.WindowStyle.None;
-
-			//this.Left = virtualScreenRect.Left;
-			//this.Top = virtualScreenRect.Top;
-			//this.Width = virtualScreenRect.Width;
-			//this.Height = virtualScreenRect.Height;
-
-			//this.Topmost = true;
-
-			//this.BorderThickness = new Thickness(0);
 			this.Invalidate();
 		}
 
@@ -41,21 +31,18 @@
 			this._windows.Clear();
 			foreach (var wnd in windows)
 			{
-				if (wnd.IsActive)
-				{
-					wnd.Close();
-				}
+				wnd.Dispose();
 			}
 		}
 
 		public void Show()
 		{
-			this._windows.ForEach(w => w.Show());
+			this._windows.ForEach(w => w.WindowState = lib.reusable.wpf.WindowState.NORMAL);
 		}
 
 		public void Hide()
 		{
-			this._windows.ForEach(w => w.Hide());
+			this._windows.ForEach(w => w.WindowState = lib.reusable.wpf.WindowState.HIDDEN);
 		}
 
 		public event EventHandler WindowsRearranged;
@@ -70,48 +57,30 @@
 
 		private void Invalidate()
 		{
-			this.Hide();
+			IScreen[] allScreens = Screen.GetScreens();
+			if (allScreens == null) { return; }
 
-			#region Make a window for each monitor
-			var allScreens = Screen.AllScreens;
-			var screenCount = allScreens.Length;
-			if (this._windows.Count != screenCount)
+			#region Remove windows associated with not existing screens
 			{
-				while (this._windows.Count > 0 && this._windows.Count > screenCount)
-				{
-					int lastWndIndex = this._windows.Count - 1;
-					var wnd = this._windows[lastWndIndex];
-					wnd.Close();
-					this._windows.RemoveAt(lastWndIndex);
-				}
+				FullScreenWindow[] windowsToRemove = this._windows.Where(w => !allScreens.Contains(w.BindScreen)).ToArray();
+				foreach (FullScreenWindow windowToRemove in windowsToRemove) { this._windows.Remove(windowToRemove); }
+			}
+			#endregion
 
-				if (screenCount > 0)
+			#region Make a window for each new screen
+			{
+				IEnumerable<IScreen> screensWithoutWindow = allScreens.Except(this._windows.Select(w => w.BindScreen));
+				foreach (IScreen screenWithoutWindow in screensWithoutWindow)
 				{
-					while (this._windows.Count < screenCount)
+					this._windows.Add(new TWnd()
 					{
-						this._windows.Add(new TWnd() { Background = new SolidColorBrush(Colors.Aqua), Content = this._windows.Count });
-					}
+						Background = new SolidColorBrush(Colors.Aqua),
+						Content = this._windows.Count,
+						BindScreen = screenWithoutWindow
+					});
 				}
 			}
 			#endregion
-
-			#region Bind windows to monitors
-			for (int screenIndex = 0; screenIndex < screenCount; ++screenIndex)
-			{
-				Screen screen = allScreens[screenIndex];
-				Window wnd = this._windows[screenIndex];
-
-				var screenBounds = screen.Bounds.ToUnits();
-				
-				wnd.Left = screenBounds.Left;
-				wnd.Top = screenBounds.Top;
-				wnd.Width = screenBounds.Width;
-				wnd.Height = screenBounds.Height;
-			}
-			#endregion
-
-			this.OnWindowsRearranged();
-
 		}
 	}
 }

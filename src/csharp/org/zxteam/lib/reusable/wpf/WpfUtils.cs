@@ -2,11 +2,10 @@ namespace org.zxteam.lib.reusable.wpf
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using System.Windows;
 
 	public static class WpfUtils
 	{
-		public static Rect ToUnits(this System.Drawing.Rectangle _this)
+		public static System.Windows.Rect ToUnits(this System.Drawing.Rectangle _this)
 		{
 			// get the system DPI
 			IntPtr dDC = WinApi.GetDC(IntPtr.Zero); // Get desktop DC
@@ -17,7 +16,7 @@ namespace org.zxteam.lib.reusable.wpf
 			// "Device-Independant Unit Size" (always 1/96)
 			// and scaling it by the system DPI
 			double physicalUnitSize = (1d / 96d) * (double)dpi;
-			Rect wpfUnits = new Rect(
+			System.Windows.Rect wpfUnits = new System.Windows.Rect(
 				(double)_this.Left / physicalUnitSize,
 				(double)_this.Top / physicalUnitSize,
 				(double)_this.Width / physicalUnitSize,
@@ -26,7 +25,7 @@ namespace org.zxteam.lib.reusable.wpf
 
 			return wpfUnits;
 		}
-		public static System.Drawing.Rectangle ToPixels(this Rect _this)
+		public static System.Drawing.Rectangle ToPixels(this System.Windows.Rect _this)
 		{
 			throw new NotImplementedException();
 		}

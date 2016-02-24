@@ -172,7 +172,7 @@ namespace org.zxteam.zxassist.screenshotter
 				//this._screenshotWindow = new DrawableWindow();
 				//this._screenshotWindow.DataContext = this;
 				//this._screenshotWindow.Show();
-				MultiScreenWindowsManager<DrawableWindow> mgr = new MultiScreenWindowsManager<DrawableWindow>();
+				MultiScreenWindowsManager<FullScreenWindow> mgr = new MultiScreenWindowsManager<FullScreenWindow>();
 				mgr.Show();
 			}
 
@@ -218,7 +218,7 @@ namespace org.zxteam.zxassist.screenshotter
 			}
 			if (this._screenshotWindow != null)
 			{
-				this._screenshotWindow.Close();
+				this._screenshotWindow.Dispose();
 				this._screenshotWindow = null;
 			}
 
@@ -238,7 +238,7 @@ namespace org.zxteam.zxassist.screenshotter
 			}
 			if (this._screenshotWindow != null)
 			{
-				this._screenshotWindow.Close();
+				this._screenshotWindow.Dispose();
 				this._screenshotWindow = null;
 			}
 
