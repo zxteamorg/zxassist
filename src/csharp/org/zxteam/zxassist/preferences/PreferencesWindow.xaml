@@ -7,19 +7,68 @@
         d:DesignHeight="300" d:DesignWidth="300"
         MinWidth="300"
         MinHeight="200"
+		SizeToContent="WidthAndHeight"
         Title="ZXAssist Preferences"
-        Icon="pack://application:,,,/src/resources/zxassist_48x48.ico">
-	<Grid>
-		<TextBlock Text="Все уже хорошо!"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
-
-		<Button Content="Сделать все хорошо!"
-                HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Padding="10"
-                Click="button_Click"/>
-	</Grid>
+        Icon="pack://application:,,,/resources/zxassist_48x48.ico">
+	<DockPanel Margin="5">
+		<Grid DockPanel.Dock="Bottom">
+			<TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5">
+				<Hyperlink NavigateUri="http://www.google.com">
+				Help
+				</Hyperlink>
+			</TextBlock>
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+				<Button Margin="5">OK</Button>
+				<Button Margin="5">Cancel</Button>
+				<Button Margin="5">Apply</Button>
+			</StackPanel>
+		</Grid>
+		<TabControl>
+			<TabItem>
+				<TabItem.Header>
+					<StackPanel>
+						<Image Height="34" Width="auto" Source="pack://application:,,,/resources/org/zxteam/zxassist/preferences/general.png" />
+						<TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom">General</TextBlock>
+					</StackPanel>
+				</TabItem.Header>
+				<StackPanel>
+					<GroupBox Header="System">
+						<StackPanel>
+							<CheckBox>
+								<TextBlock>Show desktop notifications</TextBlock>
+							</CheckBox>
+							<CheckBox>
+								<TextBlock>Start ZXAssist on system startup</TextBlock>
+							</CheckBox>
+						</StackPanel>
+					</GroupBox>
+					<GroupBox Header="Language">
+						<StackPanel>
+							<ComboBox SelectedIndex="0">
+								<ComboBoxItem>English [ENG]</ComboBoxItem>
+								<ComboBoxItem>Ukrainian [UKR]</ComboBoxItem>
+								<ComboBoxItem>Russian [RU]</ComboBoxItem>
+							</ComboBox>
+						</StackPanel>
+					</GroupBox>
+				</StackPanel>
+			</TabItem>
+			<TabItem>
+				<TabItem.Header>
+					<StackPanel>
+						<Image Height="35" Width="auto" HorizontalAlignment="Center" Source="pack://application:,,,/resources/org/zxteam/zxassist/preferences/features.png" />
+						<TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom">Features</TextBlock>
+					</StackPanel>
+				</TabItem.Header>
+			</TabItem>
+			<TabItem>
+				<TabItem.Header>
+					<StackPanel>
+						<Image Height="35" Width="auto" Source="pack://application:,,,/resources/org/zxteam/zxassist/preferences/advanced.png"/>
+						<TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom">Advanced</TextBlock>
+					</StackPanel>
+				</TabItem.Header>
+			</TabItem>
+		</TabControl>
+	</DockPanel>
 </Window>
