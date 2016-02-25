@@ -6,13 +6,10 @@
              ShutdownMode="OnExplicitShutdown">
 	<Application.Resources>
 		<ContextMenu x:Shared="false" x:Key="SysTrayMenu">
-			<TextBlock Text="Press F12 for make screenshot"/>
+			<TextBlock Text="Press Print Screen for make screenshot"/>
 			<Separator />
 			<MenuItem Header="Show Window" Command="{Binding ShowWindowCommand}" />
 			<MenuItem Header="Hide Window" Command="{Binding HideWindowCommand}" />
-			<Separator />
-			<MenuItem Header="Show DemoToolWindow" Command="{Binding ShowDemoToolWindowCommand}" />
-			<MenuItem Header="Hide DemoToolWindow" Command="{Binding HideDemoToolWindowCommand}" />
 			<Separator />
 			<MenuItem Header="Exit" Command="{Binding ExitApplicationCommand}" />
 		</ContextMenu>

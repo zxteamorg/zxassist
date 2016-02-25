@@ -12,7 +12,7 @@ namespace org.zxteam.zxassist
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			System.AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+			//System.AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 			try
 			{
 				using (var guard = new ProcessSingletonGuard(ProcessSingletonGuard.SCOPE.USER))
@@ -25,6 +25,7 @@ namespace org.zxteam.zxassist
 			}
 			catch (Exception ex)
 			{
+				throw;
 			}
 		}
 

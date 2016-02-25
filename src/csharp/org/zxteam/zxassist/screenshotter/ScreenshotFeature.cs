@@ -5,7 +5,6 @@ namespace org.zxteam.zxassist.screenshotter
 	using System.Windows.Media.Imaging;
 	using System.Windows.Threading;
 	using System.Runtime.InteropServices;
-	using System.Windows.Forms;
 	using System.Collections.Generic;
 	using System.Windows.Input;
 	using System.Windows.Ink;
@@ -15,6 +14,15 @@ namespace org.zxteam.zxassist.screenshotter
 	using org.zxteam.lib.reusable.wpf.input;
 	using org.zxteam.lib.reusable.system.hooks;
 	using org.zxteam.lib.reusable.system;
+	using System.Windows.Media;
+	using System.Diagnostics;
+	using System.Collections.Specialized;
+	using System.Net;
+	using System.Xml.Linq;
+	using System.Drawing;
+	using System.Threading;
+	using System.Threading.Tasks;
+	using System.Configuration;
 
 	internal class ScreenshotManager : ViewModelBase, IDisposable
 	{
@@ -25,9 +33,9 @@ namespace org.zxteam.zxassist.screenshotter
 			EDIT
 		}
 
+		private readonly Dispatcher _dispatcher;
 		private readonly object _sync = new object();
 		private bool _disposed;
-		//private readonly KeyboardListener _keyboardListener = new KeyboardListener();
 		private readonly LowLevelKeyboardHook _printScreenHook;
 
 		public enum KeyEvent : uint
@@ -40,18 +48,24 @@ namespace org.zxteam.zxassist.screenshotter
 
 		public ScreenshotManager()
 		{
+			this._dispatcher = Dispatcher.CurrentDispatcher;
+
+			Screen.SettingsChanged += Screen_SettingsChanged;
+
 			this._currentMode = MODE.IDLE;
 
 			_printScreenHook = Hook.CreateLowLevelKeyboardHook();
 			_printScreenHook.KeyDown += (s, e) =>
 			{
-					if (e.Key == Keys.PrintScreen)
-					{
-						Console.WriteLine("ScreenHook Activated");
-						Activation();
-					}
+				if (e.Key == System.Windows.Forms.Keys.PrintScreen)
+				{
+					Console.WriteLine("ScreenHook Activated");
+					Activate();
+				}
 			};
 		}
+
+		private void Screen_SettingsChanged(object sender, EventArgs e) { this.Cancel(); }
 
 		public void Dispose()
 		{
@@ -91,6 +105,12 @@ namespace org.zxteam.zxassist.screenshotter
 		public ICommand CancelCommand
 		{
 			get { return this._cancelCommand ?? (this._cancelCommand = new RelayCommand(this.Cancel)); }
+		}
+
+		private ICommand<byte[]> _shareCommand;
+		public ICommand<byte[]> ShareCommand
+		{
+			get { return this._shareCommand ?? (this._shareCommand = new RelayCommand<byte[]>(this.Share)); }
 		}
 
 		private MODE _currentMode;
@@ -138,43 +158,48 @@ namespace org.zxteam.zxassist.screenshotter
 			get { return this._selectTool4Command ?? (this._selectTool4Command = new RelayCommand(this.SelectTool4)); }
 		}
 
-		private DrawingAttributes _selectedToolDrawingAttributes = new DrawingAttributes() { Width = 30 };
+		private DrawingAttributes _selectedToolDrawingAttributes = new DrawingAttributes() { Width = 6, Height = 6, IsHighlighter = true, Color = System.Windows.Media.Colors.Blue };
 		public DrawingAttributes SelectedToolDrawingAttributes { get { return this._selectedToolDrawingAttributes; } }
 		#endregion
 
 		#region Workflow
-		private ToolWindowObsolete _toolWindow;
-		private DrawableWindow _screenshotWindow;
 		private DispatcherTimer _defaultActionTimer;
-		private void Activation()
+		private readonly List<FullScreenWindow> _windows = new List<FullScreenWindow>(System.Windows.Forms.SystemInformation.MonitorCount);
+		private void Activate()
 		{
-			if (!App.Current.Dispatcher.CheckAccess()) { App.Current.Dispatcher.Invoke(new Action(this.Activation)); }
+			if (!this._dispatcher.CheckAccess()) { this._dispatcher.Invoke(new Action(this.Activate)); return; }
 
-			if (this._screenshotWindow == null)
+			this.Cancel();
+
+			// capture entire screen, and save it to a file
+			var img = ScreenCapture.Instance.CaptureScreen();
+
+			// Save image as PNG stream
+			MemoryStream ms = new MemoryStream();
+			img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+			ms.Position = 0;
+
+			// Prepare BitmapImage for render in ScreenshotWindow
+			BitmapImage bi = new BitmapImage();
+			bi.BeginInit();
+			ms.Seek(0, SeekOrigin.Begin);
+			bi.StreamSource = ms;
+			bi.EndInit();
+
+			this.ScreenshotImage = bi;
+
+			IScreen[] allScreens = Screen.AllScreens;
+			if (allScreens == null) { return; }
+
+			foreach (IScreen screen in allScreens)
 			{
-				// capture entire screen, and save it to a file
-				var img = ScreenCapture.Instance.CaptureScreen();
-
-				// Save image as PNG stream
-				MemoryStream ms = new MemoryStream();
-				img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-				ms.Position = 0;
-
-				// Prepare BitmapImage for render in ScreenshotWindow
-				BitmapImage bi = new BitmapImage();
-				bi.BeginInit();
-				ms.Seek(0, SeekOrigin.Begin);
-				bi.StreamSource = ms;
-				bi.EndInit();
-
-				this.ScreenshotImage = bi;
-
-				//this._screenshotWindow = new DrawableWindow();
-				//this._screenshotWindow.DataContext = this;
-				//this._screenshotWindow.Show();
-				MultiScreenWindowsManager<FullScreenWindow> mgr = new MultiScreenWindowsManager<FullScreenWindow>();
-				mgr.Show();
+				this._windows.Add(new ScreenshotDrawableWindow()
+				{
+					BindScreen = screen,
+					DataContext = this
+				});
 			}
+			this._windows.ForEach(w => w.WindowState = org.zxteam.lib.reusable.wpf.WindowState.NORMAL);
 
 			//if (this._toolWindow == null)
 			//{
@@ -200,27 +225,27 @@ namespace org.zxteam.zxassist.screenshotter
 					this.DefaultActionTimeout = cancelCount;
 				};
 			}
-			this._defaultActionTimer.Start();
+			//this._defaultActionTimer.Start();
 
 			this.CurrentMode = MODE.ACTIVATION;
 		}
 		private void Cancel()
 		{
+			if (!this._dispatcher.CheckAccess()) { this._dispatcher.Invoke(new Action(this.Cancel)); return; }
+
 			if (this._defaultActionTimer != null)
 			{
 				this._defaultActionTimer.Stop();
 				this._defaultActionTimer = null;
 			}
-			if (this._toolWindow != null)
-			{
-				this._toolWindow.Close();
-				this._toolWindow = null;
-			}
-			if (this._screenshotWindow != null)
-			{
-				this._screenshotWindow.Dispose();
-				this._screenshotWindow = null;
-			}
+			//if (this._toolWindow != null)
+			//{
+			//	this._toolWindow.Close();
+			//	this._toolWindow = null;
+			//}
+
+			this._windows.ForEach(w => w.Dispose());
+			this._windows.Clear();
 
 			this.CurrentMode = MODE.IDLE;
 		}
@@ -231,19 +256,54 @@ namespace org.zxteam.zxassist.screenshotter
 				this._defaultActionTimer.Stop();
 				this._defaultActionTimer = null;
 			}
-			if (this._toolWindow != null)
-			{
-				this._toolWindow.Close();
-				this._toolWindow = null;
-			}
-			if (this._screenshotWindow != null)
-			{
-				this._screenshotWindow.Dispose();
-				this._screenshotWindow = null;
-			}
+			//if (this._toolWindow != null)
+			//{
+			//	this._toolWindow.Close();
+			//	this._toolWindow = null;
+			//}
+			this._windows.ForEach(w => w.Dispose());
+			this._windows.Clear();
 
 			this.CurrentMode = MODE.IDLE;
 		}
+		private void Share(byte[] data)
+		{
+			this.Cancel();
+
+			Task.Run<XDocument>(() =>
+			{
+				try
+				{
+					using (var w = new WebClient())
+					{
+						string clientID = ConfigurationManager.AppSettings["IMGUR_CLIENT_ID"];
+						w.Headers.Add("Authorization", "Client-ID " + clientID);
+						var values = new NameValueCollection { { "image", Convert.ToBase64String(data) } };
+
+						byte[] response = w.UploadValues("https://api.imgur.com/3/upload.xml", values);
+
+						var doc = XDocument.Load(new MemoryStream(response));
+						return doc;
+					}
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.ToString(), "Fail to upload", MessageBoxButton.OK, MessageBoxImage.Error);
+					return null;
+				}
+			}).ContinueWith((t) =>
+			{
+				if (t.Result != null)
+				{
+					MessageBox.Show(t.Result.ToString());
+					var link = t.Result.Root.Element(XName.Get("link")).Value;
+					Clipboard.SetText(link);
+					Process.Start(link);
+				}
+			}, TaskScheduler.FromCurrentSynchronizationContext());
+		}
+
+
 		private void SwitchToEditMode()
 		{
 			if (this._defaultActionTimer != null)

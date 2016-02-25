@@ -78,34 +78,6 @@
 		}
 
 
-		public ICommand ShowDemoToolWindowCommand
-		{
-			get
-			{
-				return new DelegateCommand
-				{
-					CanExecuteFunc = () => this._demoToolWnd == null,
-					CommandAction = () =>
-					{
-						if (this._demoToolWnd == null) { this._demoToolWnd = new ToolWindow(); }
-					}
-				};
-			}
-		}
-
-		public ICommand HideDemoToolWindowCommand
-		{
-			get
-			{
-				return new DelegateCommand
-				{
-					CommandAction = () => { this._demoToolWnd.Close(); this._demoToolWnd = null; },
-					CanExecuteFunc = () => this._demoToolWnd != null
-				};
-			}
-		}
-
-
 		/// <summary>
 		/// Shuts down the application.
 		/// </summary>

@@ -1,15 +1,14 @@
 namespace org.zxteam.lib.reusable.wpf
 {
-	using System.Windows;
 	using System;
 	using org.zxteam.lib.reusable.system;
 	using System.Windows.Controls;
 	using System.Windows.Data;
 	using System.Windows.Media;
 
-	public class FullScreenWindow : ContentControl, IWindow
+	public class FullScreenWindow : System.Windows.Window, IWindow
 	{
-		private readonly Window _wrap;
+		private readonly System.Windows.Window _wrap;
 		private bool _disposed = false;
 
 		private IScreen _bindScreen;
@@ -45,7 +44,7 @@ namespace org.zxteam.lib.reusable.wpf
 		}
 
 		private WindowState _windowState = WindowState.HIDDEN;
-		public WindowState WindowState
+		public new WindowState WindowState
 		{
 			get { return this._windowState; }
 			set
@@ -59,49 +58,51 @@ namespace org.zxteam.lib.reusable.wpf
 				}
 			}
 		}
-		private void ApplyStateToWrap(wpf.WindowState ourState)
-		{
-			switch (ourState)
-			{
-				case wpf.WindowState.HIDDEN:
-					this._wrap.Hide();
-					break;
-				case wpf.WindowState.MAXIMIZED:
-					this._wrap.WindowState = System.Windows.WindowState.Maximized;
-					this._wrap.Show();
-					break;
-				case wpf.WindowState.MINIMIZED:
-					this._wrap.WindowState = System.Windows.WindowState.Minimized;
-					this._wrap.Show();
-					break;
-				case wpf.WindowState.NORMAL:
-					this._wrap.WindowState = System.Windows.WindowState.Normal;
-					this._wrap.Show();
-					break;
-				default:
-					throw new NotImplementedException();
-			}
-		}
-
 		public FullScreenWindow()
 		{
-			this._wrap = new Window();
+			//this._wrap = new System.Windows.Window();
+			this._wrap = this;
 
 			this._wrap.WindowState = System.Windows.WindowState.Normal;
 			this._wrap.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
 			this._wrap.WindowStyle = System.Windows.WindowStyle.None;
 			this._wrap.ResizeMode = System.Windows.ResizeMode.NoResize;
-			this._wrap.SetBinding(Window.ContentProperty, new Binding() { Source = this });
-			this._wrap.SetBinding(Window.BackgroundProperty, new Binding("Background") { Source = this });
+			//this._wrap.SetBinding(System.Windows.Window.ContentProperty, new Binding() { Source = this });
+			//this._wrap.SetBinding(System.Windows.Window.BackgroundProperty, new Binding("Background") { Source = this });
 		}
 
 		public void Dispose()
 		{
 			if (!this._disposed)
 			{
+				this.BindScreen = null;
 				this._wrap.Close();
 
 				this._disposed = true;
+			}
+		}
+
+		private void ApplyStateToWrap(WindowState ourState)
+		{
+			switch (ourState)
+			{
+				case WindowState.HIDDEN:
+					this._wrap.Hide();
+					break;
+				case WindowState.MAXIMIZED:
+					this._wrap.WindowState = System.Windows.WindowState.Maximized;
+					this._wrap.Show();
+					break;
+				case WindowState.MINIMIZED:
+					this._wrap.WindowState = System.Windows.WindowState.Minimized;
+					this._wrap.Show();
+					break;
+				case WindowState.NORMAL:
+					this._wrap.WindowState = System.Windows.WindowState.Normal;
+					this._wrap.Show();
+					break;
+				default:
+					throw new NotImplementedException();
 			}
 		}
 
@@ -112,19 +113,18 @@ namespace org.zxteam.lib.reusable.wpf
 			wpf.WindowState windowState;
 			if (screen != null && screen.IsActive)
 			{
-				windowBounds = screen.Bounds.ToUnits();
 				windowState = this._windowState;
+
+				windowBounds = screen.Bounds.ToUnits();
+				this._wrap.Left = windowBounds.Left;
+				this._wrap.Top = windowBounds.Top;
+				this._wrap.Width = windowBounds.Width;
+				this._wrap.Height = windowBounds.Height;
 			}
 			else
 			{
-				windowBounds = Rect.Empty;
 				windowState = wpf.WindowState.HIDDEN;
 			}
-
-			this._wrap.Left = windowBounds.Left;
-			this._wrap.Top = windowBounds.Top;
-			this._wrap.Width = windowBounds.Width;
-			this._wrap.Height = windowBounds.Height;
 
 			this.ApplyStateToWrap(windowState);
 		}

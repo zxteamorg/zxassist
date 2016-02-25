@@ -1,0 +1,29 @@
+﻿<reusable:FullScreenWindow x:Class="org.zxteam.zxassist.screenshotter.ScreenshotDrawableWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:reusable="clr-namespace:org.zxteam.lib.reusable.wpf"
+		mc:Ignorable="d"
+		d:DesignWidth="300"
+		d:DesignHeight="200">
+	<Grid Margin="0">
+		<InkCanvas HorizontalAlignment="Stretch"
+				   VerticalAlignment="Stretch"
+				   IsEnabled="True"
+				   DefaultDrawingAttributes="{Binding SelectedToolDrawingAttributes}"
+				   x:Name="inkCanvas">
+			<InkCanvas.Background>
+				<ImageBrush ImageSource="{Binding ScreenshotImage}"/>
+			</InkCanvas.Background>
+			<!--IsEnabled="{Binding IsEditMode}"-->
+			<!--<InkCanvas.DefaultDrawingAttributes>
+				<DrawingAttributes x:Name="attribute" Width="40" Height="40" Color="{Binding SelectedToolColor}"/>
+			</InkCanvas.DefaultDrawingAttributes>-->
+		</InkCanvas>
+		<StackPanel Margin="30" HorizontalAlignment="Left" VerticalAlignment="Top">
+			<Button x:Name="cancelButton" Command="{Binding CancelCommand}" Background="Red" Margin="5">Cancel...</Button>
+			<Button x:Name="shareButton" Click="shareButton_Click" Background="Green" Margin="5">Share...</Button>
+		</StackPanel>
+	</Grid>
+</reusable:FullScreenWindow>

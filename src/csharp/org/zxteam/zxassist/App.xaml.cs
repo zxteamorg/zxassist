@@ -37,12 +37,12 @@ namespace org.zxteam.zxassist
 
 			this._screenshotManager = new ScreenshotManager();
 
-#if DEBUG
-			if (System.Diagnostics.Debugger.IsAttached)
-			{
-				((TrayIconViewModel)this._trayIcon.DataContext).ShowDemoToolWindowCommand.Execute(null);
-			}
-#endif
+//#if DEBUG
+//			if (System.Diagnostics.Debugger.IsAttached)
+//			{
+//				((TrayIconViewModel)this._trayIcon.DataContext).ShowDemoToolWindowCommand.Execute(null);
+//			}
+//#endif
 		}
 		protected override void OnExit(ExitEventArgs e)
 		{

@@ -1,0 +1,18 @@
+<UserControl 
+	x:Class="org.zxteam.lib.reusable.wpf.FullScreenWindowTest_TestUI"
+	x:ClassModifier="internal"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	d:DesignWidth="300"
+	d:DesignHeight="300"
+	FontSize="36" >
+
+	<Grid x:Name="wnd" Background="Aqua">
+		<Rectangle Margin="1" StrokeThickness="3" Stroke="Black"/>
+		<TextBlock Text="{Binding Bounds, FallbackValue=Design}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10" />
+		<Button x:Name="finishButton" Content="Finish" HorizontalAlignment="Center" VerticalAlignment="Center" Click="finishButton_Clicked" />
+	</Grid>
+</UserControl>

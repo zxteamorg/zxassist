@@ -6,7 +6,9 @@
 
 	public sealed class Screen : IScreen
 	{
-		public static IScreen[] GetScreens() { return __screens.ToArray(); }
+		public static IScreen[] AllScreens { get { return __screens.ToArray(); } }
+
+		public static event EventHandler SettingsChanged;
 
 		private int? _bitsPerPixel;
 		public int BitsPerPixel { get { return _bitsPerPixel.HasValue ? _bitsPerPixel.Value : (_bitsPerPixel = this._wrap.BitsPerPixel).Value; } }
@@ -18,7 +20,9 @@
 		public string DeviceName { get { return _deviveName ?? (_deviveName = this._wrap.DeviceName); } }
 
 		private bool _isActive;
-		public bool IsActive { get { return this._isActive; }
+		public bool IsActive
+		{
+			get { return this._isActive; }
 			set
 			{
 				if (this._isActive != value)
@@ -63,7 +67,13 @@
 			Invalidate();
 		}
 
-		private static void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e) { Invalidate(); }
+		private static void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
+		{
+			var handler = SettingsChanged;
+			if (handler != null) { handler(typeof(Screen), EventArgs.Empty); }
+
+			Invalidate();
+		}
 
 		private static void Invalidate()
 		{
@@ -74,14 +84,23 @@
 			//var notWrappedSystemScreens = systemScreens.Except(__screens.Select(s => s._wrap)).ToList();
 
 			#region Wrap new screens
-			systemScreens
-				.Except(__screens.Select(s => s._wrap))
-				.ToList()
-				.ForEach(toWrap => __screens.Add(new Screen(toWrap)));
+			{
+				// I think Systtem Screen euqals by DisplayName
+				systemScreens
+				   .Except(__screens.Select(s => s._wrap))
+				   .ToList()
+				   .ForEach(toWrap =>
+				{
+					__screens.Add(new Screen(toWrap));
+				});
+			}
 			#endregion
 
 			__screens.ForEach(screen =>
 			{
+				// Update _wrap (new setting for system screen)
+				screen._wrap = systemScreens.Where(w => w.Equals(screen._wrap)).First();
+
 				if (!systemScreens.Contains(screen._wrap))
 				{
 					screen._bitsPerPixel = 0;
@@ -105,7 +124,7 @@
 			});
 		}
 
-		private readonly System.Windows.Forms.Screen _wrap;
+		private System.Windows.Forms.Screen _wrap;
 		private Screen(System.Windows.Forms.Screen wrap) { this._wrap = wrap; }
 	}
 
