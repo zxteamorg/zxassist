@@ -67,7 +67,7 @@ namespace org.zxteam.lib.reusable.wpf
 
 		private void Invalidate()
 		{
-			IScreen[] allScreens = Screen.AllScreens;
+			IPhysicalScreen[] allScreens = Screen.PhysicalScreens;
 			if (allScreens == null) { return; }
 
 			#region Remove windows associated with not existing screens
