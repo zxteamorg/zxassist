@@ -4,13 +4,16 @@
 
 	public interface IScreen
 	{
-		int BitsPerPixel { get; }
 		System.Drawing.Rectangle Bounds { get; }
+		event EventHandler BoundsChanged;
+	}
+
+	public interface IPhysicalScreen : IScreen
+	{
+		int BitsPerPixel { get; }
 		string DeviceName { get; }
 		bool IsActive { get; }
 		bool IsConnected { get; }
 		bool IsPrimary { get; }
-		event EventHandler BoundsChanged;
 	}
-
 }

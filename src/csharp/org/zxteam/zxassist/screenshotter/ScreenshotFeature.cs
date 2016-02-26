@@ -188,17 +188,28 @@ namespace org.zxteam.zxassist.screenshotter
 
 			this.ScreenshotImage = bi;
 
-			IScreen[] allScreens = Screen.AllScreens;
-			if (allScreens == null) { return; }
+			//IScreen[] allScreens = Screen.AllScreens;
+			//if (allScreens == null) { return; }
 
-			foreach (IScreen screen in allScreens)
+			//foreach (IScreen screen in allScreens)
+			//{
+			//	this._windows.Add(new ScreenshotDrawableWindow()
+			//	{
+			//		BindScreen = screen,
+			//		DataContext = this
+			//	});
+			//}
+			//this._windows.ForEach(w => w.WindowState = org.zxteam.lib.reusable.wpf.WindowState.NORMAL);
+
+			IScreen virtualScreen = Screen.VirtualScreen;
+			if (virtualScreen == null) { return; }
+
+			this._windows.Add(new ScreenshotDrawableWindow()
 			{
-				this._windows.Add(new ScreenshotDrawableWindow()
-				{
-					BindScreen = screen,
-					DataContext = this
-				});
-			}
+				BindScreen = virtualScreen,
+				DataContext = this
+			});
+
 			this._windows.ForEach(w => w.WindowState = org.zxteam.lib.reusable.wpf.WindowState.NORMAL);
 
 			//if (this._toolWindow == null)

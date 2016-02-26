@@ -111,7 +111,7 @@ namespace org.zxteam.lib.reusable.wpf
 			var screen = this._bindScreen;
 			System.Windows.Rect windowBounds;
 			wpf.WindowState windowState;
-			if (screen != null && screen.IsActive)
+			if (screen != null && (!(screen is IPhysicalScreen) || ((IPhysicalScreen)screen).IsActive))
 			{
 				windowState = this._windowState;
 

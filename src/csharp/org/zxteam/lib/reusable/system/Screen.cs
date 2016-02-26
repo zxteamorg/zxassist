@@ -4,11 +4,37 @@
 	using System.Linq;
 	using System.Collections.Generic;
 
-	public sealed class Screen : IScreen
+	public abstract class Screen
 	{
-		public static IScreen[] AllScreens { get { return __screens.ToArray(); } }
+		public static IScreen VirtualScreen { get { return __virtualScreen.Value; } }
+		public static IPhysicalScreen[] PhysicalScreens { get { return PhysicalScreen.PhysicalScreens; } }
 
 		public static event EventHandler SettingsChanged;
+
+		private static readonly Lazy<VirtualScreen> __virtualScreen = new Lazy<VirtualScreen>(
+			() => new VirtualScreen(), System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
+
+		static Screen()
+		{
+			Microsoft.Win32.SystemEvents.DisplaySettingsChanged += new EventHandler(SystemEvents_DisplaySettingsChanged);
+		}
+
+		private static void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
+		{
+			if(__virtualScreen.IsValueCreated) 
+			{
+				__virtualScreen.Value.Invalidate();
+			}
+
+			var handler = SettingsChanged;
+			if (handler != null) { handler(typeof(Screen), EventArgs.Empty); }
+		}
+	}
+
+	public sealed class PhysicalScreen : Screen, IPhysicalScreen
+	{
+		public static new PhysicalScreen[] PhysicalScreens { get { return __screens.ToArray(); } }
+		private static readonly List<PhysicalScreen> __screens;
 
 		private int? _bitsPerPixel;
 		public int BitsPerPixel { get { return _bitsPerPixel.HasValue ? _bitsPerPixel.Value : (_bitsPerPixel = this._wrap.BitsPerPixel).Value; } }
@@ -59,29 +85,13 @@
 			if (handler != null) { handler(this, EventArgs.Empty); }
 		}
 
-		private static readonly List<Screen> __screens;
-		static Screen()
+		private void Invalidate() 
 		{
-			__screens = new List<Screen>();
-			Microsoft.Win32.SystemEvents.DisplaySettingsChanged += new EventHandler(SystemEvents_DisplaySettingsChanged);
-			Invalidate();
 		}
-
-		private static void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
+		
+		private static void UpdateWrapBinding()
 		{
-			var handler = SettingsChanged;
-			if (handler != null) { handler(typeof(Screen), EventArgs.Empty); }
-
-			Invalidate();
-		}
-
-		private static void Invalidate()
-		{
-			//var wrappedSystemScreens = __screens.Select(s=>s._wrap).ToList();
 			var systemScreens = System.Windows.Forms.Screen.AllScreens.ToList();
-
-			//var obloseteScreens = __screens.Where(w => !systemScreens.Contains(w._wrap));
-			//var notWrappedSystemScreens = systemScreens.Except(__screens.Select(s => s._wrap)).ToList();
 
 			#region Wrap new screens
 			{
@@ -91,7 +101,7 @@
 				   .ToList()
 				   .ForEach(toWrap =>
 				{
-					__screens.Add(new Screen(toWrap));
+					__screens.Add(new PhysicalScreen(toWrap));
 				});
 			}
 			#endregion
@@ -125,7 +135,52 @@
 		}
 
 		private System.Windows.Forms.Screen _wrap;
-		private Screen(System.Windows.Forms.Screen wrap) { this._wrap = wrap; }
+		private PhysicalScreen(System.Windows.Forms.Screen wrap) { this._wrap = wrap; }
+
+		static PhysicalScreen()
+		{
+			__screens = new List<PhysicalScreen>();
+			Microsoft.Win32.SystemEvents.DisplaySettingsChanged += new EventHandler(SystemEvents_DisplaySettingsChanged);
+		}
+		private static void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
+		{
+			PhysicalScreen.UpdateWrapBinding();
+		}
 	}
 
+	internal class VirtualScreen : Screen, IScreen
+	{
+		public VirtualScreen()
+		{
+			Microsoft.Win32.SystemEvents.DisplaySettingsChanged += delegate { this.Invalidate(); };
+			Invalidate();
+		}
+
+		#region Bounds stuff
+		System.Drawing.Rectangle _bounds;
+		public System.Drawing.Rectangle Bounds
+		{
+			get { return _bounds; }
+			set
+			{
+				if (this._bounds != value)
+				{
+					this._bounds = value;
+					this.OnBoundsChanged();
+				}
+			}
+		}
+		public event EventHandler BoundsChanged;
+		private void OnBoundsChanged()
+		{
+			var handler = this.BoundsChanged;
+			if (handler != null) { handler(this, EventArgs.Empty); }
+		}
+		#endregion
+
+		public void Invalidate()
+		{
+			this.Bounds = System.Windows.Forms.SystemInformation.VirtualScreen;
+		}
+	}
 }
