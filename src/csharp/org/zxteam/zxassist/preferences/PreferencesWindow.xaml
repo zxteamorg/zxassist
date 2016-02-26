@@ -118,6 +118,62 @@
 						<TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom">Advanced</TextBlock>
 					</StackPanel>
 				</TabItem.Header>
+				<TreeView>
+					<TreeViewItem Header="ZXAssist Host App">
+						<StackPanel>
+							<CheckBox Content="Auto updates"/>
+							<CheckBox Content="Auto updates"/>
+							<CheckBox Content="Auto updates"/>
+						</StackPanel>
+					</TreeViewItem>
+					<TreeViewItem Header="ZXFeature1"/>
+					<TreeViewItem Header="ZXFeature2"/>
+					<TreeViewItem Header="ZXFeature3"/>
+					<TreeViewItem Header="ZXFeature4"/>
+					<TreeViewItem Header="ZXScreenshot">
+						<StackPanel>
+							<StackPanel Orientation="Horizontal">
+								<TextBlock Text="Default tool" VerticalAlignment="Center"/>
+								<ComboBox SelectedIndex="0">
+									<ComboBoxItem>Pen</ComboBoxItem>
+									<ComboBoxItem>Crop</ComboBoxItem>
+									<ComboBoxItem>Rectangle</ComboBoxItem>
+									<ComboBoxItem>Arrow</ComboBoxItem>
+								</ComboBox>
+							</StackPanel>
+							<StackPanel Orientation="Horizontal">
+								<TextBlock Text="Switch to edit mode timeout" VerticalAlignment="Center"/>
+								<ComboBox SelectedIndex="2">
+									<ComboBoxItem>1</ComboBoxItem>
+									<ComboBoxItem>2</ComboBoxItem>
+									<ComboBoxItem>5</ComboBoxItem>
+									<ComboBoxItem>10</ComboBoxItem>
+								</ComboBox>
+							</StackPanel>
+						</StackPanel>
+						<!--<TreeViewItem Header="Screenshot target">
+							<RadioButton Content="Save to disk"/>
+							<RadioButton>
+								<GroupBox>
+									<StackPanel Orientation="Vertical">
+										<TextBlock Text="Share to imgur.com"/>
+										<CheckBox Content="Open in browser after upload"/>
+										<CheckBox Content="Copy link to Clipboard"/>
+									</StackPanel>
+								</GroupBox>
+							</RadioButton>
+							<RadioButton>
+								<GroupBox>
+									<StackPanel Orientation="Vertical">
+										<TextBlock Text="Share to ZXAssist.com"/>
+										<CheckBox Content="Open in browser after upload"/>
+										<CheckBox Content="Copy link to Clipboard"/>
+									</StackPanel>
+								</GroupBox>
+							</RadioButton>
+						</TreeViewItem>-->
+					</TreeViewItem>
+				</TreeView>
 			</TabItem>
 		</TabControl>
 	</DockPanel>
