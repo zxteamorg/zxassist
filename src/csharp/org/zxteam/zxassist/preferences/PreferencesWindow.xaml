@@ -1,15 +1,15 @@
 ﻿<Window x:Class="org.zxteam.zxassist.preferences.PreferencesWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-        mc:Ignorable="d" 
-        d:DesignHeight="300" d:DesignWidth="300"
-        MinWidth="300"
-        MinHeight="200"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+		mc:Ignorable="d" 
+		d:DesignHeight="300" d:DesignWidth="300"
+		MinWidth="300"
+		MinHeight="200"
 		SizeToContent="WidthAndHeight"
-        Title="ZXAssist Preferences"
-        Icon="pack://application:,,,/resources/zxassist_48x48.ico">
+		Title="ZXAssist Preferences"
+		Icon="pack://application:,,,/resources/zxassist_48x48.ico">
 	<DockPanel Margin="5">
 		<Grid DockPanel.Dock="Bottom">
 			<TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5">
@@ -17,14 +17,14 @@
 				Help
 				</Hyperlink>
 			</TextBlock>
-			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
-				<Button Margin="5">OK</Button>
-				<Button Margin="5">Cancel</Button>
-				<Button Margin="5">Apply</Button>
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,5,5">
+				<Button Padding="5" Margin="5">OK</Button>
+				<Button Padding="5" Margin="5">Cancel</Button>
+				<Button Padding="5" Margin="5">Apply</Button>
 			</StackPanel>
 		</Grid>
 		<TabControl>
-			<TabItem>
+			<TabItem Name="Gerenal">
 				<TabItem.Header>
 					<StackPanel>
 						<Image Height="34" Width="auto" Source="pack://application:,,,/resources/org/zxteam/zxassist/preferences/general.png" />
@@ -53,15 +53,65 @@
 					</GroupBox>
 				</StackPanel>
 			</TabItem>
-			<TabItem>
+			<TabItem Name="Features">
 				<TabItem.Header>
 					<StackPanel>
 						<Image Height="35" Width="auto" HorizontalAlignment="Center" Source="pack://application:,,,/resources/org/zxteam/zxassist/preferences/features.png" />
 						<TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom">Features</TextBlock>
 					</StackPanel>
 				</TabItem.Header>
+				<ListBox>
+					<ListBoxItem>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="auto"></ColumnDefinition>
+								<ColumnDefinition></ColumnDefinition>
+								<ColumnDefinition Width="auto"></ColumnDefinition>
+							</Grid.ColumnDefinitions>
+							<Image Grid.Column="0" Height="35" Margin="5" Source="pack://application:,,,/resources/org/zxteam/zxassist/preferences/features.png" />
+							<TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="5" FontWeight="Bold">ZX Screenshot</TextBlock>
+							<Button Grid.Column="2">Enable</Button>
+						</Grid>
+					</ListBoxItem>
+					<ListBoxItem>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="auto"></ColumnDefinition>
+								<ColumnDefinition></ColumnDefinition>
+								<ColumnDefinition Width="auto"></ColumnDefinition>
+							</Grid.ColumnDefinitions>
+							<Image Grid.Column="0" Height="35" Margin="5" Source="pack://application:,,,/resources/org/zxteam/zxassist/preferences/features.png" />
+							<TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="5" FontWeight="Bold">ZX Screenshot</TextBlock>
+							<Button Grid.Column="2">Enable</Button>
+						</Grid>
+					</ListBoxItem>
+					<ListBoxItem>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="auto"></ColumnDefinition>
+								<ColumnDefinition></ColumnDefinition>
+								<ColumnDefinition Width="auto"></ColumnDefinition>
+							</Grid.ColumnDefinitions>
+							<Image Grid.Column="0" Height="35" Margin="5" Source="pack://application:,,,/resources/org/zxteam/zxassist/preferences/features.png" />
+							<TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="5" FontWeight="Bold">ZX Screenshot</TextBlock>
+							<Button Grid.Column="2">Enable</Button>
+						</Grid>
+					</ListBoxItem>
+					<ListBoxItem>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="auto"></ColumnDefinition>
+								<ColumnDefinition></ColumnDefinition>
+								<ColumnDefinition Width="auto"></ColumnDefinition>
+							</Grid.ColumnDefinitions>
+							<Image Grid.Column="0" Height="35" Margin="5" Source="pack://application:,,,/resources/org/zxteam/zxassist/preferences/features.png" />
+							<TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="5" FontWeight="Bold">ZX Screenshot</TextBlock>
+							<Button Grid.Column="2">Enable</Button>
+						</Grid>
+					</ListBoxItem>
+				</ListBox>
 			</TabItem>
-			<TabItem>
+			<TabItem Name="Advanced">
 				<TabItem.Header>
 					<StackPanel>
 						<Image Height="35" Width="auto" Source="pack://application:,,,/resources/org/zxteam/zxassist/preferences/advanced.png"/>
