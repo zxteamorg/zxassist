@@ -10,6 +10,13 @@
 		SizeToContent="WidthAndHeight"
 		Title="ZXAssist Preferences"
 		Icon="pack://application:,,,/resources/zxassist_48x48.ico">
+	<Window.Resources>
+		<Style TargetType="{x:Type Button}">
+			<Setter Property="Height" Value="23"/>
+			<Setter Property="Width" Value="75"/>
+			<Setter Property="Margin" Value="3.5,0,3.5,7"/>
+		</Style>
+	</Window.Resources>
 	<DockPanel Margin="5">
 		<Grid DockPanel.Dock="Bottom">
 			<TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5">
@@ -18,9 +25,9 @@
 				</Hyperlink>
 			</TextBlock>
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,5,5">
-				<Button Padding="5" Margin="5">OK</Button>
-				<Button Padding="5" Margin="5">Cancel</Button>
-				<Button Padding="5" Margin="5">Apply</Button>
+				<Button>OK</Button>
+				<Button>Cancel</Button>
+				<Button>Apply</Button>
 			</StackPanel>
 		</Grid>
 		<TabControl>
@@ -61,6 +68,11 @@
 					</StackPanel>
 				</TabItem.Header>
 				<ListBox>
+					<ListBox.ItemContainerStyle>
+						<Style TargetType="ListBoxItem">
+							<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+						</Style>
+					</ListBox.ItemContainerStyle>
 					<ListBoxItem>
 						<Grid>
 							<Grid.ColumnDefinitions>
@@ -94,7 +106,7 @@
 							</Grid.ColumnDefinitions>
 							<Image Grid.Column="0" Height="35" Margin="5" Source="pack://application:,,,/resources/org/zxteam/zxassist/preferences/features.png" />
 							<TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="5" FontWeight="Bold">ZX Screenshot</TextBlock>
-							<Button Grid.Column="2">Enable</Button>
+							<Button Grid.Column="2">Disable</Button>
 						</Grid>
 					</ListBoxItem>
 					<ListBoxItem>
@@ -119,46 +131,39 @@
 					</StackPanel>
 				</TabItem.Header>
 				<TreeView>
-					<TreeViewItem Header="ZXAssist Host App">
-						<StackPanel>
-							<CheckBox Content="Auto updates"/>
-							<CheckBox Content="Auto updates"/>
-							<CheckBox Content="Auto updates"/>
-						</StackPanel>
-					</TreeViewItem>
-					<TreeViewItem Header="ZXFeature1"/>
-					<TreeViewItem Header="ZXFeature2"/>
-					<TreeViewItem Header="ZXFeature3"/>
-					<TreeViewItem Header="ZXFeature4"/>
-					<TreeViewItem Header="ZXScreenshot">
-						<StackPanel>
-							<StackPanel Orientation="Horizontal">
-								<TextBlock Text="Default tool" VerticalAlignment="Center"/>
-								<ComboBox SelectedIndex="0">
-									<ComboBoxItem>Pen</ComboBoxItem>
-									<ComboBoxItem>Crop</ComboBoxItem>
-									<ComboBoxItem>Rectangle</ComboBoxItem>
-									<ComboBoxItem>Arrow</ComboBoxItem>
-								</ComboBox>
+					<TreeViewItem Header="ZX ScreenShot">
+						<TreeViewItem Header="General">
+							<StackPanel>
+								<CheckBox Content="Automatically copy a link after uploading"/>
+								<CheckBox Content="Show notifications abuot copying and saving"/>
 							</StackPanel>
-							<StackPanel Orientation="Horizontal">
-								<TextBlock Text="Switch to edit mode timeout" VerticalAlignment="Center"/>
-								<ComboBox SelectedIndex="2">
-									<ComboBoxItem>1</ComboBoxItem>
-									<ComboBoxItem>2</ComboBoxItem>
-									<ComboBoxItem>5</ComboBoxItem>
-									<ComboBoxItem>10</ComboBoxItem>
-								</ComboBox>
+						</TreeViewItem>
+						<TreeViewItem Header="Hotkeys">
+							<StackPanel>
+								<Grid>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition/>
+										<ColumnDefinition/>
+									</Grid.ColumnDefinitions>
+									<Grid.RowDefinitions>
+										<RowDefinition/>
+										<RowDefinition/>
+									</Grid.RowDefinitions>
+									<CheckBox Grid.Column="0" Grid.Row="0" Content="General hotkeys"/>
+									<TextBox Grid.Column="1" Grid.Row="0" Text="Prnt Scrn"></TextBox>
+									<CheckBox Grid.Column="0" Grid.Row="1" Content="Instant save of the fullscreen"/>
+									<TextBox Grid.Column="1" Grid.Row="1" Text="Shift + Prnt Scrn"></TextBox>
+								</Grid>
 							</StackPanel>
-						</StackPanel>
-						<!--<TreeViewItem Header="Screenshot target">
+						</TreeViewItem>
+						<TreeViewItem Header="Type saving">
 							<RadioButton Content="Save to disk"/>
-							<RadioButton>
+							<RadioButton IsChecked="{x:Null}">
 								<GroupBox>
 									<StackPanel Orientation="Vertical">
 										<TextBlock Text="Share to imgur.com"/>
 										<CheckBox Content="Open in browser after upload"/>
-										<CheckBox Content="Copy link to Clipboard"/>
+										<CheckBox IsChecked="True" Content="Copy link to Clipboard"/>
 									</StackPanel>
 								</GroupBox>
 							</RadioButton>
@@ -171,7 +176,15 @@
 									</StackPanel>
 								</GroupBox>
 							</RadioButton>
-						</TreeViewItem>-->
+						</TreeViewItem>
+					</TreeViewItem>
+					<TreeViewItem Header="RSS Reader">
+					</TreeViewItem>
+					<TreeViewItem Header="CTFS">
+					</TreeViewItem>
+					<TreeViewItem Header="TimeTrack">
+					</TreeViewItem>
+					<TreeViewItem Header="Other">
 					</TreeViewItem>
 				</TreeView>
 			</TabItem>
