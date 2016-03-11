@@ -25,7 +25,7 @@
 #if MIN_NETFX_45
 			[CallerMemberName] 
 #endif
- string propertyName = null)
+			string propertyName = null)
 		{
 #if MAX_NETFX_40
 			if (propertyName == null) { propertyName = this.ResolvePropertyName(); }
@@ -58,7 +58,7 @@
 #if MIN_NETFX_45
 			[CallerMemberName] 
 #endif
- string propertyName = null)
+	string propertyName = null)
 		{
 #if MAX_NETFX_40
 			if (propertyName == null) { propertyName = this.ResolvePropertyName(); }

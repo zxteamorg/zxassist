@@ -19,8 +19,8 @@
 		public void Execute(object parameter)
 		{
 			_action();
-        }
-        #endregion
+		}
+		#endregion
 
 		public RelayCommand(Action action)
 		{

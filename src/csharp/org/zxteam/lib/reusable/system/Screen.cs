@@ -97,9 +97,9 @@
 			{
 				// I think Systtem Screen euqals by DisplayName
 				systemScreens
-				   .Except(__screens.Select(s => s._wrap))
-				   .ToList()
-				   .ForEach(toWrap =>
+					.Except(__screens.Select(s => s._wrap))
+					.ToList()
+					.ForEach(toWrap =>
 				{
 					__screens.Add(new PhysicalScreen(toWrap));
 				});
