@@ -288,8 +288,9 @@ namespace org.zxteam.zxassist.screenshotter
 					using (var w = new WebClient())
 					{
 						string clientID = ConfigurationManager.AppSettings["IMGUR_CLIENT_ID"];
-						w.Headers.Add("Authorization", "Client-ID " + clientID);
+						w.Headers.Add(HttpRequestHeader.Authorization, "Client-ID " + clientID);
 						var values = new NameValueCollection { { "image", Convert.ToBase64String(data) } };
+						File.WriteAllText(@"C:\Users\maxim.anurin\Downloads\base64image.txt", Convert.ToBase64String(data));
 
 						byte[] response = w.UploadValues("https://api.imgur.com/3/upload.xml", values);
 
